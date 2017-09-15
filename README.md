@@ -111,6 +111,5 @@ With Virtual Adversarial Dropout with QE loss
 
 (QE loss)
 
-```python train_semisup.py --dataset=svhn --data_dir=dataset/svhn/ --log_dir=log/svhn_semisup_VAT+VAdD-QE --method=VAT+VAdD-QE --num_epochs=300 --epsilon=3.5 --aug_trans=True --lamb_max=25.0 --top_bn --delta=0.05
-```
+```python train_semisup.py --dataset=svhn --data_dir=dataset/svhn/ --log_dir=log/svhn_semisup_VAT+VAdD-QE --method=VAT+VAdD-QE --num_epochs=300 --epsilon=3.5 --aug_trans=True --lamb_max=25.0 --top_bn --delta=0.05```
 
