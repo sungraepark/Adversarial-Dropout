@@ -2,8 +2,8 @@
 
 Tensorflow implementation for the results in the paper "Adversarial Dropout for Supervised and Semi-supervised Learning" (https://arxiv.org/abs/1707.03631)
 
-This implementation is based on the Code from Takeru Miyato's repository at (https://github.com/takerum/vat_tf)
-(Thank for Takeru Miyato's job)
+This implementation is based on the Code from Takeru Miyato's repository at https://github.com/takerum/vat_tf
+(Thank for Takeru Miyato's Work)
 
 ## Preparation of dataset
 
