@@ -5,6 +5,10 @@ Tensorflow implementation for the results in the paper "Adversarial Dropout for 
 This implementation is based on the Code from Takeru Miyato's repository at https://github.com/takerum/vat_tf
 (Thank for Takeru Miyato's Work)
 
+## Dependency
+
+This work was tested with Tensorflow 1.1.0, CUDA 8.0, python 2.7 
+
 ## Preparation of dataset
 
 CIFAR10 for supervised learning
