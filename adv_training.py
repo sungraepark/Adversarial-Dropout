@@ -58,22 +58,23 @@ def generate_virtual_adversarial_dropout_mask(x, logit, is_training=True):
     logit_m, init_mask =  CNN.logit(x, None, is_training=True, update_batch_stats=False,
                                     stochastic=True, seed=1234)
     dist = L.kl_divergence_with_logit(logit_m, logit)
-    mask_grad = tf.stop_gradient(tf.gradients(temp_loss, [init_mask], aggregation_method=2)[0])
+    mask_grad = tf.stop_gradient(tf.gradients(dist, [init_mask], aggregation_method=2)[0])
     return flipping_algorithm(init_mask, mask_grad)
 
     
 def virtual_adversarial_dropout_loss(x, logit, is_training=True, name="vadt_loss"):
     adv_mask = generate_virtual_adversarial_dropout_mask(x, logit, is_training=is_training)
     logit_p = logit
-    logit_m = CNN.logit(x, adv_mask, is_training=True, update_batch_stats=True,
+    logit_m, _ = CNN.logit(x, adv_mask, is_training=True, update_batch_stats=True,
                                     stochastic=True, seed=1234)
+
     loss = L.kl_divergence_with_logit(logit_p, logit_m)
     return tf.identity(loss, name=name)
 
 def flipping_algorithm(init_mask, Jacobian, name="adv_filpping"):
     
     dim = tf.reduce_prod(tf.shape(init_mask)[1:])
-    change_limit = int(layer_sizes[4]*FLAGS.delta)
+    change_limit = int(CNN.layer_sizes[4]*FLAGS.delta)
     changed_mask = init_mask
     
     if change_limit != 0 :   
@@ -104,7 +105,7 @@ def flipping_algorithm(init_mask, Jacobian, name="adv_filpping"):
         
         # normalization
         sum_mask = tf.cast( tf.reduce_sum(changed_mask, axis=1, keep_dims=True), tf.float32)
-        changed_mask = math_ops.div(changed_mask,sum_mask)*tf.to_float(dim)
+        changed_mask = tf.div(changed_mask,sum_mask)*tf.to_float(dim)
         changed_mask = tf.reshape(changed_mask, tf.shape(init_mask))
     
     return changed_mask

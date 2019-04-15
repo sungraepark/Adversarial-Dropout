@@ -59,19 +59,18 @@ def logit(x, dropout_mask=None, is_training=True, update_batch_stats=True, stoch
     h = tf.reduce_mean(h, reduction_indices=[1, 2])  # Global average pooling
 
     # dropout with mask
-    if dropout_mask is not None:
-        # When we hold a dropout mask (Fully Connected)
-        h = h*dropout_mask
-    else:
+    if dropout_mask is None:
         # Base dropout mask is 1 (Fully Connected)
-        dropout_mask = tf.ones_like(h) 
+        dropout_mask = tf.ones_like(h)
+
+    h = h*dropout_mask 
 
     h = L.fc(h, layer_sizes[4], 10, seed=rng.randint(123456), name='fc')
 
     if FLAGS.top_bn:
         h = bn(h, 10, is_training=is_training,
                  update_batch_stats=update_batch_stats, name='bfc')
-
+    
     return h, dropout_mask
      
 

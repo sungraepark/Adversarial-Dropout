@@ -6,12 +6,8 @@ import math
 import os
 import layers as L
 from utilities import * 
-import adv_training as adt
-
-FLAGS = tf.app.flags.FLAGS
 
 tf.app.flags.DEFINE_string('device', '/gpu:0', "device")
-tf.app.flags.DEFINE_string('dataset', 'cifar10', "{cifar10, svhn}")
 tf.app.flags.DEFINE_string('log_dir', "", "log_dir")
 tf.app.flags.DEFINE_integer('seed', 5, "initial random seed")
 
@@ -39,13 +35,12 @@ tf.app.flags.DEFINE_float('epsilon', 8.0, "norm length for (virtual) adversarial
 tf.app.flags.DEFINE_integer('num_power_iterations', 1, "the number of power iterations")
 tf.app.flags.DEFINE_float('xi', 1e-6, "small constant for finite difference")
 
-    
-if FLAGS.dataset == 'cifar10':
-    from cifar10 import one_transformed_input, two_transformed_input, unlabeled_two_transformed_input
-    NUM_EVAL_EXAMPLES = 10000
-else: 
-    raise NotImplementedError
+FLAGS = tf.app.flags.FLAGS
 
+import adv_training as adt
+from cifar10 import one_transformed_input, two_transformed_input, unlabeled_two_transformed_input
+
+NUM_EVAL_EXAMPLES = 10000
 
 def build_training_graph(x_1, x_2, y, ul_x_1, ul_x_2, lr, mom, lamb):
     global_step = tf.get_variable(
@@ -146,6 +141,7 @@ def main(_):
             summary_writer=None,
             save_model_secs=150, recovery_wait_secs=0)
 
+
         print("Training...")
         with sv.managed_session() as sess:
             for ep in range(FLAGS.num_epochs):
@@ -173,9 +169,9 @@ def main(_):
                     
                     # Eval on test data
                     act_values_dict = {}
-                    for key, _ in losses_eval_test.iteritems():
+                    for key in losses_eval_test.keys():
                         act_values_dict[key] = 0
-                    n_iter_per_epoch = NUM_EVAL_EXAMPLES / FLAGS.eval_batch_size
+                    n_iter_per_epoch = int(NUM_EVAL_EXAMPLES / FLAGS.eval_batch_size)
                     for i in range(n_iter_per_epoch):
                         values = losses_eval_test.values()
                         act_values = sess.run(values)
@@ -183,8 +179,8 @@ def main(_):
                             act_values_dict[key] += value
                     summary = tf.Summary()
                     current_global_step = sess.run(global_step)
-                    for key, value in act_values_dict.iteritems():
-                        summary.value.add(tag=key, simple_value=value / n_iter_per_epoch)
+                    for key in act_values_dict.keys():
+                        summary.value.add(tag=key, simple_value=act_values_dict[key] / n_iter_per_epoch)
                     if writer_test is not None:
                         writer_test.add_summary(summary, current_global_step)
                     
