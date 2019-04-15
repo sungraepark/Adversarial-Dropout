@@ -4,9 +4,6 @@ import numpy
 import tensorflow as tf
 import math
 import os
-import layers as L
-from utilities import * 
-import adv_training as adt
 
 FLAGS = tf.app.flags.FLAGS
 
@@ -38,6 +35,11 @@ tf.app.flags.DEFINE_integer('rampdown_length', 50, "rampup_length_for_lamb")
 tf.app.flags.DEFINE_float('epsilon', 8.0, "norm length for (virtual) adversarial training ")
 tf.app.flags.DEFINE_integer('num_power_iterations', 1, "the number of power iterations")
 tf.app.flags.DEFINE_float('xi', 1e-6, "small constant for finite difference")
+
+
+import layers as L
+from utilities import *
+import adv_training as adt
 
     
 if FLAGS.dataset == 'cifar10':
