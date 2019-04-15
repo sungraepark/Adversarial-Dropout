@@ -8,7 +8,7 @@ This implementation is based on the Code from Takeru Miyato's repository at http
 
 ## Dependency
 
-This work was tested with Tensorflow 1.1.0, CUDA 8.0, python 2.7 
+This work was tested with Tensorflow 1.4.1, CUDA 8.0, python 2.7 
 
 ## Preparation of dataset
 
